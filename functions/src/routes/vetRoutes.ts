@@ -99,6 +99,29 @@ vetRoutes.get("/pet/:id", async (req, res) => {
 
 // PUT
 
+// customer
+vetRoutes.put("/customer/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body as Customer;
+  delete data._id;
+  try {
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Customer>("customers")
+      .replaceOne({ _id: new ObjectId(id) }, data);
+    if (result.modifiedCount === 0) {
+      res.status(404).json({ message: "ID Not Found" });
+    } else {
+      data._id = new ObjectId(id);
+      res.json(data);
+    }
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 // DELETE
 
 export default vetRoutes;
