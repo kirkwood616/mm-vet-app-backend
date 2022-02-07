@@ -55,6 +55,26 @@ vetRoutes.get("/medical-records", async (req, res) => {
 
 // GET BY ID
 
+// customer by e-mail
+vetRoutes.get("/customer/:email", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const client = await getClient();
+    const item = await client
+      .db()
+      .collection<Customer>("customers")
+      .findOne({ email: email });
+    if (item) {
+      res.json(item);
+    } else {
+      res.status(404).json({ message: "Customer Not Found" });
+    }
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 // customer
 vetRoutes.get("/customer/:id", async (req, res) => {
   const id = req.params.id;
