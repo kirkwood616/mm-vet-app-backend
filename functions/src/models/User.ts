@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import Pet from "./Pet";
 
-export default interface Customer {
+export default interface User {
   _id?: ObjectId;
   firstName: string;
   lastName: string;

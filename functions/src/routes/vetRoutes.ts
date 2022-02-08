@@ -1,7 +1,7 @@
 import { getClient } from "../db";
 import express from "express";
 import { ObjectId } from "mongodb";
-import Customer from "../models/Customer";
+import User from "../models/User";
 import Pet from "../models/Pet";
 import MedicalRecord from "../models/MedicalRecord";
 
@@ -9,13 +9,13 @@ const vetRoutes = express.Router();
 
 // GET
 
-// all customers
-vetRoutes.get("/customers", async (req, res) => {
+// all users
+vetRoutes.get("/users", async (req, res) => {
   try {
     const client = await getClient();
     const results = await client
       .db()
-      .collection<Customer>("customers")
+      .collection<User>("users")
       .find()
       .toArray();
     res.json(results);
@@ -56,18 +56,18 @@ vetRoutes.get("/medical-records", async (req, res) => {
 // GET BY ID
 
 // customer by e-mail
-vetRoutes.get("/customer/:email", async (req, res) => {
+vetRoutes.get("/user/:email", async (req, res) => {
   const email = req.params.email;
   try {
     const client = await getClient();
     const item = await client
       .db()
-      .collection<Customer>("customers")
+      .collection<User>("users")
       .findOne({ email: email });
     if (item) {
       res.json(item);
     } else {
-      res.status(404).json({ message: "Customer Not Found" });
+      res.status(404).json({ message: "User Not Found" });
     }
   } catch (err) {
     console.error("ERROR", err);
@@ -76,18 +76,18 @@ vetRoutes.get("/customer/:email", async (req, res) => {
 });
 
 // customer
-vetRoutes.get("/customer/:id", async (req, res) => {
+vetRoutes.get("/user/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const client = await getClient();
     const item = await client
       .db()
-      .collection<Customer>("customers")
+      .collection<User>("users")
       .findOne({ _id: new ObjectId(id) });
     if (item) {
       res.json(item);
     } else {
-      res.status(404).json({ message: "Customer Not Found" });
+      res.status(404).json({ message: "User Not Found" });
     }
   } catch (err) {
     console.error("ERROR", err);
@@ -120,15 +120,15 @@ vetRoutes.get("/pet/:id", async (req, res) => {
 // PUT
 
 // customer
-vetRoutes.put("/customer/:id", async (req, res) => {
+vetRoutes.put("/user/:id", async (req, res) => {
   const id = req.params.id;
-  const data = req.body as Customer;
+  const data = req.body as User;
   delete data._id;
   try {
     const client = await getClient();
     const result = await client
       .db()
-      .collection<Customer>("customers")
+      .collection<User>("users")
       .replaceOne({ _id: new ObjectId(id) }, data);
     if (result.modifiedCount === 0) {
       res.status(404).json({ message: "ID Not Found" });
