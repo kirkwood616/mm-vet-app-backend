@@ -4,7 +4,6 @@ import { ObjectId } from "mongodb";
 import User from "../models/User";
 import Pet from "../models/Pet";
 import MedicalRecord from "../models/MedicalRecord";
-import Picture from "../models/UserPicture";
 
 const vetRoutes = express.Router();
 
