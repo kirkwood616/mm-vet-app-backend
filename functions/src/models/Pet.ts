@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import MedicalRecord from "./MedicalRecord";
+import UserPicture from "./UserPicture";
 
 interface Pet {
   _id?: ObjectId;
@@ -12,9 +13,10 @@ interface Pet {
   sex: string;
   dateOfBirth: string;
   isFixed: boolean;
+  isMicroChipped: boolean;
   weight: number;
   diet: string;
-  picture: string;
+  picture: UserPicture;
   medicalRecords: MedicalRecord[];
 }
 

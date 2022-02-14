@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import User from "../models/User";
 import Pet from "../models/Pet";
 import MedicalRecord from "../models/MedicalRecord";
+import Picture from "../models/UserPicture";
 
 const vetRoutes = express.Router();
 
@@ -118,6 +119,27 @@ vetRoutes.get("/pet/:id", async (req, res) => {
 // POST
 
 // PUT
+vetRoutes.put("/pet/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body as Pet;
+  delete data._id;
+  try {
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Pet>("pets")
+      .replaceOne({ _id: new ObjectId(id) }, data);
+    if (result.modifiedCount === 0) {
+      res.status(404).json({ message: "ID Not Found" });
+    } else {
+      data._id = new ObjectId(id);
+      res.json(data);
+    }
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 // customer
 vetRoutes.put("/user/:id", async (req, res) => {
