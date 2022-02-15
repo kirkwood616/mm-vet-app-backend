@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import User from "../models/User";
 import Pet from "../models/Pet";
 import MedicalRecord from "../models/MedicalRecord";
+import MessageBoardPost from "../models/MessageBoardPost";
 
 const vetRoutes = express.Router();
 
@@ -45,6 +46,22 @@ vetRoutes.get("/medical-records", async (req, res) => {
       .db()
       .collection<MedicalRecord>("medical-records")
       .find()
+      .toArray();
+    res.json(results);
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+//general message board posts
+vetRoutes.get("/message-board/general", async (req, res) => {
+  try {
+    const client = await getClient();
+    const results = await client
+      .db()
+      .collection<MessageBoardPost>("message-board")
+      .find({ board: "general" })
       .toArray();
     res.json(results);
   } catch (err) {
