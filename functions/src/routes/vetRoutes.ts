@@ -134,6 +134,22 @@ vetRoutes.get("/pet/:id", async (req, res) => {
 
 // POST
 
+// message board
+vetRoutes.post("/message-board", async (req, res) => {
+  const item = req.body as MessageBoardPost;
+  try {
+    const client = await getClient();
+    await client
+      .db()
+      .collection<MessageBoardPost>("message-board")
+      .insertOne(item);
+    res.status(201).json(item);
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 // PUT
 vetRoutes.put("/pet/:id", async (req, res) => {
   const id = req.params.id;
