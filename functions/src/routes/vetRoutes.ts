@@ -196,6 +196,50 @@ vetRoutes.put("/user/:id", async (req, res) => {
   }
 });
 
-// DELETE
+// message board PUT
+
+vetRoutes.put("/message-board/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body as MessageBoardPost;
+  delete data._id;
+  try {
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<MessageBoardPost>("message-board")
+      .replaceOne({ _id: new ObjectId(id) }, data);
+    if (result.modifiedCount === 0) {
+      res.status(404).json({ message: "ID Not Found" });
+    } else {
+      data._id = new ObjectId(id);
+      res.json(data);
+    }
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// DELETE ////////////////////////////////////////////////////////
+
+//message board post DELETE
+vetRoutes.delete("/message-board/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<MessageBoardPost>("message-board")
+      .deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      res.status(404).json({ message: "Not Found" });
+    } else {
+      res.status(204).end();
+    }
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 export default vetRoutes;
