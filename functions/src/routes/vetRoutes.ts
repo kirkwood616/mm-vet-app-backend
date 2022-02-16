@@ -5,6 +5,7 @@ import User from "../models/User";
 import Pet from "../models/Pet";
 import MedicalRecord from "../models/MedicalRecord";
 import MessageBoardPost from "../models/MessageBoardPost";
+import AppointmentRequest from "../models/AppointmentRequest";
 
 const vetRoutes = express.Router();
 
@@ -62,6 +63,22 @@ vetRoutes.get("/message-board/general", async (req, res) => {
       .db()
       .collection<MessageBoardPost>("message-board")
       .find({ board: "general" })
+      .toArray();
+    res.json(results);
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// appointment requests
+vetRoutes.get("/appointment-requests", async (req, res) => {
+  try {
+    const client = await getClient();
+    const results = await client
+      .db()
+      .collection<AppointmentRequest>("appointment-requests")
+      .find()
       .toArray();
     res.json(results);
   } catch (err) {
@@ -142,6 +159,22 @@ vetRoutes.post("/message-board", async (req, res) => {
     await client
       .db()
       .collection<MessageBoardPost>("message-board")
+      .insertOne(item);
+    res.status(201).json(item);
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// request appointment
+vetRoutes.post("/appointment-requests", async (req, res) => {
+  const item = req.body as AppointmentRequest;
+  try {
+    const client = await getClient();
+    await client
+      .db()
+      .collection<AppointmentRequest>("appointment-requests")
       .insertOne(item);
     res.status(201).json(item);
   } catch (err) {
