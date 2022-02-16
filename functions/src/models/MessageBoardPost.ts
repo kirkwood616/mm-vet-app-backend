@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
+
 interface MessageBoardPost {
-  id?: string;
+  _id?: ObjectId;
   dateTime: string;
   board: string;
   user: string;
