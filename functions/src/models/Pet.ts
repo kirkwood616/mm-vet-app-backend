@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import MedicalRecord from "./MedicalRecord";
 import UserPicture from "./UserPicture";
+import Vaccination from "./Vaccination";
 
 interface Pet {
   _id?: ObjectId;
@@ -18,6 +19,7 @@ interface Pet {
   diet: string;
   picture: UserPicture;
   medicalRecords: MedicalRecord[];
+  vaccinations: Vaccination[];
 }
 
 export default Pet;
