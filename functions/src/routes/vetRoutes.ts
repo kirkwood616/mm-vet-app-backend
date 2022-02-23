@@ -6,6 +6,7 @@ import Pet from "../models/Pet";
 import MedicalRecord from "../models/MedicalRecord";
 import MessageBoardPost from "../models/MessageBoardPost";
 import AppointmentRequest from "../models/AppointmentRequest";
+import Service from "../models/Service";
 
 const vetRoutes = express.Router();
 
@@ -46,6 +47,22 @@ vetRoutes.get("/medical-records", async (req, res) => {
     const results = await client
       .db()
       .collection<MedicalRecord>("medical-records")
+      .find()
+      .toArray();
+    res.json(results);
+  } catch (err) {
+    console.error("ERROR", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+//all services
+vetRoutes.get("/services", async (req, res) => {
+  try {
+    const client = await getClient();
+    const results = await client
+      .db()
+      .collection<Service>("services")
       .find()
       .toArray();
     res.json(results);
